@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.petadoption.activities.PetDetailActivity
-import com.example.petadoption.database.PetEntity
-import com.example.petadoption.databinding.ItemPetBinding
+import lk.petpet.app.activities.PetDetailActivity
+import lk.petpet.app.database.PetEntity
+import lk.petpet.app.databinding.ItemPetBinding
 
 class PetListAdapter : ListAdapter<PetEntity, PetListAdapter.PetViewHolder>(PetDiffCallback()) {
 
