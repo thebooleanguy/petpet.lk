@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">petpet.lk</string>
+    <string name="add_pet">Add Pet</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="location_permission_required">Location permission is required to show pet locations</string>
+    <string name="camera_permission_required">Camera permission is required to take photos</string>
 </resources>
