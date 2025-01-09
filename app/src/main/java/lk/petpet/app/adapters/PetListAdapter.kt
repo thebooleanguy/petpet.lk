@@ -1,25 +1,24 @@
 package lk.petpet.app.adapters
 
-import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import lk.petpet.app.activities.PetDetailActivity
-import lk.petpet.app.database.PetEntity
 import lk.petpet.app.databinding.ItemPetBinding
+import lk.petpet.app.models.Pet
 
-class PetListAdapter : ListAdapter<PetEntity, PetListAdapter.PetViewHolder>(PetDiffCallback()) {
+class PetListAdapter : ListAdapter<Pet, PetListAdapter.PetViewHolder>(PetDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetViewHolder {
-        val binding = ItemPetBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+        return PetViewHolder(
+            ItemPetBinding.inflate(
+                LayoutInflater.from(parent.context),
+                                   parent,
+                                   false
+            )
         )
-        return PetViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PetViewHolder, position: Int) {
@@ -30,19 +29,17 @@ class PetListAdapter : ListAdapter<PetEntity, PetListAdapter.PetViewHolder>(PetD
         private val binding: ItemPetBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(pet: PetEntity) {
+        fun bind(pet: Pet) {
             binding.apply {
                 tvPetNameList.text = pet.name
-                tvPetInfoList.text = "${pet.species} - ${pet.breed}, ${pet.age} years"
-                
-                // Load image
+                tvPetInfoList.text = "${pet.breed} • ${pet.age}"
+
                 try {
                     ivPetThumb.setImageURI(Uri.parse(pet.imageUri))
                 } catch (e: Exception) {
-                    // Handle error
+                    // Handle error loading image
                 }
 
-                // Set click listener
                 root.setOnClickListener {
                     val intent = Intent(root.context, PetDetailActivity::class.java).apply {
                         putExtra("pet_id", pet.id)
@@ -53,13 +50,8 @@ class PetListAdapter : ListAdapter<PetEntity, PetListAdapter.PetViewHolder>(PetD
         }
     }
 
-    private class PetDiffCallback : DiffUtil.ItemCallback<PetEntity>() {
-        override fun areItemsTheSame(oldItem: PetEntity, newItem: PetEntity): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: PetEntity, newItem: PetEntity): Boolean {
-            return oldItem == newItem
-        }
+    private class PetDiffCallback : DiffUtil.ItemCallback<Pet>() {
+        override fun areItemsTheSame(oldItem: Pet, newItem: Pet) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Pet, newItem: Pet) = oldItem == newItem
     }
 }

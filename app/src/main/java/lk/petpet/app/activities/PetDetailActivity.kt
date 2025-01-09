@@ -4,8 +4,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.petadoption.database.PetDatabase
-import com.example.petadoption.databinding.ActivityPetDetailBinding
+import lk.petpet.app.database.PetDatabase
+import lk.petpet.app.databinding.ActivityPetDetailBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -15,56 +15,71 @@ import kotlinx.coroutines.launch
 
 class PetDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPetDetailBinding
-    private var googleMap: GoogleMap? = null
-    private val database by lazy { PetDatabase.getDatabase(this) }
+        private var googleMap: GoogleMap? = null
+            private val database by lazy { PetDatabase.getDatabase(this) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPetDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                binding = ActivityPetDetailBinding.inflate(layoutInflater)
+                setContentView(binding.root)
 
-        val petId = intent.getLongExtra("pet_id", -1)
-        if (petId != -1L) {
-            setupMap()
-            loadPetDetails(petId)
-        } else {
-            finish()
-        }
-    }
+                setupToolbar()
+                setupMap()
+                loadPetDetails(intent.getLongExtra("pet_id", -1))
+            }
 
-    private fun setupMap() {
-        val mapFragment = supportFragmentManager
-            .findFragmentById(com.example.petadoption.R.id.mapDetail) as SupportMapFragment
-        mapFragment.getMapAsync { map ->
-            googleMap = map
-        }
-    }
+            private fun setupToolbar() {
+                binding.btnBack.setOnClickListener { finish() }
+            }
 
-    private fun loadPetDetails(petId: Long) {
-        lifecycleScope.launch {
-            val pet = database.petDao().getPetById(petId)
-            pet?.let {
-                binding.apply {
-                    tvPetName.text = it.name
-                    tvSpecies.text = "Species: ${it.species}"
-                    tvBreed.text = "Breed: ${it.breed}"
-                    tvAge.text = "Age: ${it.age} years"
-                    tvDescription.text = it.description
+            private fun setupMap() {
+                val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.mapDetail) as SupportMapFragment
+                mapFragment.getMapAsync { map ->
+                    googleMap = map
+                }
+            }
 
-                    try {
-                        ivPetImage.setImageURI(Uri.parse(it.imageUri))
-                    } catch (e: Exception) {
-                        // Handle error
-                    }
+            private fun loadPetDetails(petId: Long) {
+                if (petId == -1L) {
+                    finish()
+                    return
+                }
 
-                    // Update map
-                    val petLocation = LatLng(it.latitude, it.longitude)
-                    googleMap?.apply {
-                        addMarker(MarkerOptions().position(petLocation).title(it.name))
-                        moveCamera(CameraUpdateFactory.newLatLngZoom(petLocation, 15f))
+                lifecycleScope.launch {
+                    database.petDao().getPetById(petId)?.let { petEntity ->
+                        val pet = petEntity.toPet()
+                        binding.apply {
+                            tvPetName.text = pet.name
+                            tvBreed.text = pet.breed
+
+                            chipAge.text = pet.age
+                            chipWeight.text = pet.weight
+                            chipSex.text = pet.sex
+
+                            tvDescription.text = pet.description
+
+                            try {
+                                ivPetImage.setImageURI(Uri.parse(pet.imageUri))
+                            } catch (e: Exception) {
+                                // Handle error loading image
+                            }
+
+                            val petLocation = LatLng(pet.latitude, pet.longitude)
+                            googleMap?.apply {
+                                addMarker(MarkerOptions().position(petLocation))
+                                moveCamera(CameraUpdateFactory.newLatLngZoom(petLocation, 15f))
+                            }
+
+                            btnAdopt.setOnClickListener {
+                                // Implement adoption process
+                            }
+
+                            btnCall.setOnClickListener {
+                                // Implement call functionality
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
 }
