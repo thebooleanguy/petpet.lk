@@ -1,117 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:hint="Search" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPetName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Pet Name" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSpecies"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Species (Dog/Cat/etc)" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBreed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Breed" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Age"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Description"
-                    android:inputType="textMultiLine"
-                    android:minLines="3" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCamera"
-                    android:layout_width="wrap_content"
+                <!-- Pet Category Chips -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="Camera"
-                    app:icon="@drawable/ic_camera" />
+                    android:layout_marginBottom="16dp"
+                    app:singleSelection="true">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGallery"
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDogs"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dogs"
+                        app:chipIcon="@drawable/ic_dog" />
+
+                    <!-- Add similar chips for Cats, Birds, Pets -->
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerPets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingBottom="80dp" />
+
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottomNav"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gallery"
-                    app:icon="@drawable/ic_gallery" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerPets"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    android:layout_gravity="bottom"
+                    app:menu="@menu/bottom_nav_menu" />
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
